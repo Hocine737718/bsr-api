@@ -8,28 +8,36 @@ import { Customer } from '@prisma/client';
 export class CustomerService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async create(createCustomerDto: CreateCustomerDto): Promise<Customer> {
-        return this.prisma.customer.create({
-            data: createCustomerDto,
-        });
+    async create(data: CreateCustomerDto): Promise<Customer> {
+        return this.prisma.customer.create({ data });
     }
 
     async findAll(): Promise<Customer[]> {
-        return this.prisma.customer.findMany();
+        return this.prisma.customer.findMany({
+            where: { deletedAt: null }, // Only fetch customers that are not soft-deleted
+        });
     }
 
-    async findOne(id: string): Promise<Customer> {
-        return this.prisma.customer.findUnique({ where: { id } });
+    async findOne(id: string): Promise<Customer | null> {
+        return this.prisma.customer.findFirst({
+            where: {
+                id,
+                deletedAt: null, // Exclude soft-deleted customers
+            },
+        });
     }
 
-    async update(id: string, updateCustomerDto: UpdateCustomerDto): Promise<Customer> {
+    async update(id: string, data: UpdateCustomerDto): Promise<Customer> {
         return this.prisma.customer.update({
             where: { id },
-            data: updateCustomerDto,
+            data,
         });
     }
 
     async remove(id: string): Promise<void> {
-        await this.prisma.customer.delete({ where: { id } });
+        await this.prisma.customer.update({
+            where: { id },
+            data: { deletedAt: new Date() }, // Set deletedAt to soft-delete
+        });
     }
 }
