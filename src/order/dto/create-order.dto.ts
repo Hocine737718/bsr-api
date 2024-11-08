@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateOrderDto {
 
@@ -7,4 +8,10 @@ export class CreateOrderDto {
 
     @ApiProperty({ example: 100.00 })
     total: number;
+
+    @ApiProperty({ example: "an example of observation", required: false })
+    @IsOptional()  // Optional field
+    @IsString()
+    observation?: string; // The observation field
 }
+
