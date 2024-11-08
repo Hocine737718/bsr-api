@@ -18,12 +18,15 @@ export class OrderService {
         });
     }
 
-    async findOne(id: string): Promise<Order | null> {
+    async findOne(id: string, doInclude: boolean = false): Promise<Order | null> {
         return this.prisma.order.findFirst({
             where: {
                 id,
                 deletedAt: null, // Exclude soft-deleted orders
             },
+            include: {
+                items: doInclude
+            }
         });
     }
 

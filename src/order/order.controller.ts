@@ -4,11 +4,13 @@ import { ApiTags } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { CreateOrderItemDto } from 'src/order_item/dto/create-order_item.dto';
+import { OrderItemService } from 'src/order_item/order_item.service';
 
 @ApiTags('orders')
 @Controller('orders')
 export class OrderController {
-    constructor(private readonly orderService: OrderService) { }
+    constructor(private readonly orderService: OrderService, private readonly orderItemService: OrderItemService) { }
 
     @Post()
     create(@Body() data: CreateOrderDto) {
@@ -33,5 +35,13 @@ export class OrderController {
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.orderService.remove(id);
+    }
+
+    @Post(':orderId/items')
+    async addOrderItem(@Param('orderId') orderId: string, @Body() itemsData: CreateOrderItemDto[]) {
+        for (let i = 0; i < itemsData.length; i++) {
+            await this.orderItemService.create(itemsData[i]);
+        }
+        return this.orderService.findOne(orderId, true);
     }
 }
