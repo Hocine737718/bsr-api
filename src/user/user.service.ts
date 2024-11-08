@@ -27,6 +27,15 @@ export class UserService {
     });
   }
 
+  async findOneByName(name: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        name,
+        deletedAt: null, // Exclude soft-deleted users
+      },
+    });
+  }
+
   async update(id: string, data: UpdateUserDto): Promise<User> {
     return this.prisma.user.update({
       where: { id },
