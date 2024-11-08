@@ -43,3 +43,12 @@ model Product {
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime? @db.Timestamp // Nullable field for soft deletion
 }
+
+model User {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @db.Timestamp // Nullable field for soft deletion
+}
