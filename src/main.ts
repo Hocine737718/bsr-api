@@ -7,6 +7,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(passport.initialize());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.enableCors({
+    origin: '*', // Allowed origins
+    methods: '*', // Allowed methods
+    allowedHeaders: 'Content-Type, Authorization', // Allowed headers
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  });
   const config = new DocumentBuilder()
     .setTitle('BSR API')
     .setDescription('API for managing orders and customers')
