@@ -40,4 +40,11 @@ export class ProductService {
             data: { deletedAt: new Date() }, // Set deletedAt to soft-delete
         });
     }
+
+    async updateImage(id: string, imagePath: string) {
+        return this.prisma.product.update({
+            where: { id },
+            data: { image: imagePath },
+        });
+    }
 }
