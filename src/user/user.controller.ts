@@ -9,10 +9,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  // @Post()
-  // create(@Body() data: CreateUserDto) {
-  //   return this.userService.create(data);
-  // }
+  @Post()
+  create(@Body() data: CreateUserDto) {
+    return this.userService.create(data);
+  }
 
   // @Get()
   // findAll() {
