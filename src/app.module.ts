@@ -14,7 +14,7 @@ import { join } from 'path';
 @Module({
   imports: [PrismaModule, OrderModule, CustomerModule, ProductModule, UserModule, AuthModule, OrderItemModule, ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'uploads'), // The directory from which static files will be served
-    serveRoot: '/static', // Optional: Customize the route path to serve static files
+    serveRoot: '/uploads/', // Optional: Customize the route path to serve static files
   }),],
   controllers: [AppController],
   providers: [AppService],
