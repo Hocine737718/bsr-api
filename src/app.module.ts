@@ -8,9 +8,14 @@ import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { OrderItemModule } from './order_item/order_item.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  imports: [PrismaModule, OrderModule, CustomerModule, ProductModule, UserModule, AuthModule, OrderItemModule],
+  imports: [PrismaModule, OrderModule, CustomerModule, ProductModule, UserModule, AuthModule, OrderItemModule, ServeStaticModule.forRoot({
+    rootPath: join(__dirname, '..', 'uploads'), // The directory from which static files will be served
+    serveRoot: '/static', // Optional: Customize the route path to serve static files
+  }),],
   controllers: [AppController],
   providers: [AppService],
 })
