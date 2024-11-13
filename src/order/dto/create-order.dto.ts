@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateOrderDto {
 
@@ -18,5 +18,12 @@ export class CreateOrderDto {
     @IsOptional()
     @IsNumber()
     delivery_cost?: number;
+
+    // In create-order.dto.ts or update-order.dto.ts
+    @IsOptional()
+    @IsBoolean()
+    @ApiProperty({ example: true, description: 'Indicates if the order is to be delivered to an office.' })
+    is_to_office?: boolean;
+
 }
 
