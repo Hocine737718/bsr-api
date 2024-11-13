@@ -12,9 +12,13 @@ export class OrderService {
         return this.prisma.order.create({ data });
     }
 
-    async findAll(): Promise<Order[]> {
+    async findAll(doInclude: boolean = false): Promise<Order[]> {
         return this.prisma.order.findMany({
             where: { deletedAt: null }, // Only fetch orders that are not soft-deleted
+            include: {
+                items: doInclude,
+                customer: doInclude
+            }
         });
     }
 
@@ -25,7 +29,8 @@ export class OrderService {
                 deletedAt: null, // Exclude soft-deleted orders
             },
             include: {
-                items: doInclude
+                items: doInclude,
+                customer: doInclude
             }
         });
     }

@@ -22,7 +22,7 @@ export class OrderController {
 
     @Get()
     findAll() {
-        return this.orderService.findAll();
+        return this.orderService.findAll(true);
     }
 
     @Get(':id')
