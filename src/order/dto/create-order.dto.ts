@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateOrderDto {
 
@@ -13,5 +13,10 @@ export class CreateOrderDto {
     @IsOptional()  // Optional field
     @IsString()
     observation?: string; // The observation field
+
+    @ApiProperty({ example: 10.0, description: 'The delivery cost for the order', required: false })
+    @IsOptional()
+    @IsNumber()
+    delivery_cost?: number;
 }
 
