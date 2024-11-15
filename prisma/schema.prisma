@@ -13,14 +13,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Size {
+enum Enum_Size {
   XS
   S
   M
   L
   XL
   XXL
-  XXXL
 }
 
 model OrderItem {
@@ -30,7 +29,7 @@ model OrderItem {
   quantity    Int
   price       Float
   observation String?
-  size        Size      @default(S)
+  size        Enum_Size @default(S)
   item_total  Float
   order       Order     @relation(fields: [order_id], references: [id])
   product     Product   @relation(fields: [product_id], references: [id])
