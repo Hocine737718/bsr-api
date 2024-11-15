@@ -13,7 +13,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
     UserModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'your_jwt_secret',
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '36000s' },
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
