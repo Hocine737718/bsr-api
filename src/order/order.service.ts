@@ -3,10 +3,11 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from '@prisma/client';
+import { OrderItemService } from 'src/order_item/order_item.service';
 
 @Injectable()
 export class OrderService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService, private readonly orderItemService: OrderItemService) { }
 
     async create(data: CreateOrderDto): Promise<Order> {
         return this.prisma.order.create({ data });
@@ -47,5 +48,15 @@ export class OrderService {
             where: { id },
             data: { deletedAt: new Date() }, // Set deletedAt to soft-delete
         });
+    }
+
+    async removeItems(id: string, force: boolean = false): Promise<void> {
+        let items = await this.prisma.orderItem.findMany({ where: { order_id: id } });
+        if (items && items.length) {
+            for (let i = 0; i < items.length; i++) {
+                let item = items[i];
+                await this.orderItemService.remove(item.id, force);
+            };
+        }
     }
 }

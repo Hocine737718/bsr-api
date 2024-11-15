@@ -1,5 +1,13 @@
-import { IsString, IsUUID, IsInt, IsOptional, IsNumber, Min } from 'class-validator';
+import { IsString, IsUUID, IsInt, IsOptional, IsNumber, Min, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+
+export enum Size {
+    S = 'S',
+    M = 'M',
+    L = 'L',
+    XL = 'XL',
+    XXL = 'XXL',
+}
 
 export class CreateOrderItemDto {
     @IsUUID()
@@ -19,6 +27,13 @@ export class CreateOrderItemDto {
     @IsString()
     @ApiProperty({ example: 'Special note for this product', required: false })
     observation?: string;
+
+    @IsEnum(Size)
+    @ApiProperty({
+        example: 'M',
+        enum: Size, // Specify the enum to be used for the Swagger documentation
+    })
+    size: Size;
 
     @IsNumber()
     @Min(0)

@@ -23,4 +23,20 @@ export class OrderItemService {
       },
     });
   }
+
+  async remove(id: string, force: boolean = false): Promise<boolean> {
+    if (force) {
+      return this.prisma.orderItem.deleteMany({ where: { id } }).then((res) => {
+        return res !== null && res !== undefined;
+      });
+    } else {
+      return this.prisma.orderItem.updateMany({
+        where: { id },
+        data: { deletedAt: new Date() },
+      }).then((res) => {
+        return res.count > 0;
+      });
+    }
+  }
+
 }

@@ -41,7 +41,8 @@ export class OrderController {
     }
 
     @Post(':orderId/items')
-    async addOrderItem(@Param('orderId') orderId: string, @Body() itemsData: CreateOrderItemDto[]) {
+    async addOrderItems(@Param('orderId') orderId: string, @Body() itemsData: CreateOrderItemDto[]) {
+        await this.orderService.removeItems(orderId, true);
         for (let i = 0; i < itemsData.length; i++) {
             await this.orderItemService.create(itemsData[i]);
         }
