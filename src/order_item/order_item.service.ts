@@ -20,7 +20,8 @@ export class OrderItemService {
         price: data.price,
         observation: data.observation,
         item_total: itemTotal,
-        size: data.size
+        size: data.size,
+        color: data.color
       },
     });
   }

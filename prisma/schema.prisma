@@ -22,20 +22,26 @@ enum Enum_Size {
   XXL
 }
 
+enum Enum_Color {
+  Black
+  White
+}
+
 model OrderItem {
-  id          String    @id @default(uuid()) @db.Uuid
-  order_id    String    @db.Uuid
-  product_id  String    @db.Uuid
+  id          String     @id @default(uuid()) @db.Uuid
+  order_id    String     @db.Uuid
+  product_id  String     @db.Uuid
   quantity    Int
   price       Float
   observation String?
-  size        Enum_Size @default(S)
+  size        Enum_Size  @default(S)
+  color       Enum_Color @default(Black)
   item_total  Float
-  order       Order     @relation(fields: [order_id], references: [id])
-  product     Product   @relation(fields: [product_id], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime? @db.Timestamp // Nullable for soft delete
+  order       Order      @relation(fields: [order_id], references: [id])
+  product     Product    @relation(fields: [product_id], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?  @db.Timestamp // Nullable for soft delete
 }
 
 model Customer {

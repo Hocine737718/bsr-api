@@ -10,6 +10,11 @@ export enum Size {
     XXL = 'XXL',
 }
 
+export enum Color {
+    Black = "Black",
+    White = "White"
+}
+
 export class CreateOrderItemDto {
     @IsUUID()
     @ApiProperty({ example: 'order-uuid', description: 'The UUID of the order' })
@@ -35,6 +40,13 @@ export class CreateOrderItemDto {
         enum: Size, // Specify the enum to be used for the Swagger documentation
     })
     size: Size;
+
+    @IsEnum(Color)
+    @ApiProperty({
+        example: 'Black',
+        enum: Color, // Specify the enum to be used for the Swagger documentation
+    })
+    color: Color;
 
     @IsNumber()
     @Min(0)

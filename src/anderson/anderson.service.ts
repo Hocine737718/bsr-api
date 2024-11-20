@@ -30,7 +30,7 @@ export class AndersonService {
         let orderItem = await this.orderItemService.findOne(item.id, true);
         if (!orderItem.product) throw new InternalServerErrorException("Cannot Find Product of Item : " + item.createdAt);
         products += orderItem.product.name.substring(0, 10) + ' '
-        products += orderItem.quantity + " " + orderItem.size + ' '
+        products += orderItem.quantity + " " + orderItem.size + ' ' + orderItem.color.substring(0, 1) + ' '
         if (i + 1 < order.items.length) products += '+ '
       }
       console.log("🚀 ~ AndersonService ~ send ~ products:", products);
