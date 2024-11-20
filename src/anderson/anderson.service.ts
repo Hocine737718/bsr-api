@@ -97,12 +97,9 @@ export class AndersonService {
 
   async getWilayas() {
     try {
-      console.log("---------- AndersonService.getWilayas ----------");
       if (!process.env.ANDERSON_URL || !process.env.ANDERSON_TOKEN) {
         throw new Error('Anderson URL or Token not configured');
       }
-      console.log("🚀 ~ AndersonService ~ getWilayas ~ process.env.ANDERSON_TOKEN:", process.env.ANDERSON_TOKEN);
-      console.log("🚀 ~ AndersonService ~ getWilayas ~ process.env.ANDERSON_URL:", process.env.ANDERSON_URL);
 
       const url = `${process.env.ANDERSON_URL}api/v1/get/wilayas`; // Replace with the actual URL
       // Configure headers with the Bearer token
