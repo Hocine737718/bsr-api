@@ -2,37 +2,39 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { Order } from '@prisma/client';
+import { AndersonOrders, Customer, Order, OrderItem } from '@prisma/client';
 import { OrderItemService } from 'src/order_item/order_item.service';
+import { AndersonService } from 'src/anderson/anderson.service';
 
 @Injectable()
 export class OrderService {
     constructor(private readonly prisma: PrismaService, private readonly orderItemService: OrderItemService) { }
 
     async create(data: CreateOrderDto): Promise<Order> {
-        return this.prisma.order.create({ data });
-    }
-
-    async findAll(doInclude: boolean = false): Promise<Order[]> {
-        return this.prisma.order.findMany({
-            where: { deletedAt: null }, // Only fetch orders that are not soft-deleted
-            include: {
-                items: doInclude,
-                customer: doInclude
-            }
+        return this.prisma.order.create({ data }).then(async (res) => {
+            await this.prisma.andersonOrders.create({ data: { orderId: res.id } });
+            return res;
         });
     }
 
-    async findOne(id: string, doInclude: boolean = false): Promise<Order | null> {
+    async findAll(doInclude: boolean = false): Promise<(Order & { customer?: Customer; items?: OrderItem[]; andersonOrders?: AndersonOrders })[]> {
+        return this.prisma.order.findMany({
+            where: { deletedAt: null }, // Only fetch orders that are not soft-deleted
+            include: doInclude
+                ? { items: true, customer: true, andersonOrders: true }
+                : undefined, // If `doInclude` is false, exclude relationships
+        });
+    }
+
+    async findOne(id: string, doInclude: boolean = false): Promise<Order & { customer?: Customer; items?: OrderItem[]; andersonOrders?: AndersonOrders } | null> {
         return this.prisma.order.findFirst({
             where: {
                 id,
                 deletedAt: null, // Exclude soft-deleted orders
             },
-            include: {
-                items: doInclude,
-                customer: doInclude
-            }
+            include: doInclude
+                ? { items: true, customer: true, andersonOrders: true }
+                : undefined, // If `doInclude` is false, exclude relationships
         });
     }
 
@@ -47,7 +49,8 @@ export class OrderService {
         await this.prisma.order.update({
             where: { id },
             data: { deletedAt: new Date() }, // Set deletedAt to soft-delete
-        });
+        })
+        await this.prisma.andersonOrders.delete({ where: { orderId: id } });
     }
 
     async removeItems(id: string, force: boolean = false): Promise<void> {

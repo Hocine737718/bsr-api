@@ -7,13 +7,19 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { CreateOrderItemDto } from 'src/order_item/dto/create-order_item.dto';
 import { OrderItemService } from 'src/order_item/order_item.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { AndersonService } from 'src/anderson/anderson.service';
 
 @ApiTags('orders')
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class OrderController {
-    constructor(private readonly orderService: OrderService, private readonly orderItemService: OrderItemService) { }
+    constructor(private readonly orderService: OrderService, private readonly orderItemService: OrderItemService, private readonly andersonService: AndersonService) { }
+
+    @Get('wilayas')
+    async getWilayas() {
+        return await this.andersonService.getWilayas();
+    }
 
     @Post()
     create(@Body() data: CreateOrderDto) {
@@ -27,7 +33,7 @@ export class OrderController {
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.orderService.findOne(id);
+        return this.orderService.findOne(id, true);
     }
 
     @Patch(':id')
@@ -47,5 +53,10 @@ export class OrderController {
             await this.orderItemService.create(itemsData[i]);
         }
         return this.orderService.findOne(orderId, true);
+    }
+
+    @Post('confirm/:id')
+    async sendToAnderson(@Param('id') id: string) {
+        return await this.andersonService.send(id);
     }
 }

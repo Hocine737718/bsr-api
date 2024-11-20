@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderItemDto } from './dto/create-order_item.dto';
-import { OrderItem } from '@prisma/client';
+import { OrderItem, Product } from '@prisma/client';
 
 @Injectable()
 export class OrderItemService {
@@ -22,6 +22,18 @@ export class OrderItemService {
         item_total: itemTotal,
         size: data.size
       },
+    });
+  }
+
+  async findOne(id: string, doInclude: boolean = false): Promise<OrderItem & { product: Product } | null> {
+    return this.prisma.orderItem.findFirst({
+      where: {
+        id,
+        deletedAt: null, // Exclude soft-deleted orders
+      },
+      include: doInclude
+        ? { product: true }
+        : undefined, // If `doInclude` is false, exclude relationships
     });
   }
 

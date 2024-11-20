@@ -38,20 +38,6 @@ model OrderItem {
   deletedAt   DateTime? @db.Timestamp // Nullable for soft delete
 }
 
-model Order {
-  id            String      @id @default(uuid()) @db.Uuid
-  customerId    String      @db.Uuid
-  total         Float
-  customer      Customer    @relation(fields: [customerId], references: [id])
-  observation   String? // Add this line to the model
-  delivery_cost Float? // Nullable delivery cost field
-  is_to_office  Boolean     @default(false)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  deletedAt     DateTime?   @db.Timestamp // Nullable field for soft deletion
-  items         OrderItem[]
-}
-
 model Customer {
   id        String    @id @default(uuid()) @db.Uuid
   name      String
@@ -82,4 +68,35 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime? @db.Timestamp // Nullable field for soft deletion
+}
+
+enum Enum_AndersonOrder {
+  InProgress
+  Success
+  Error
+}
+
+model AndersonOrders {
+  id        String             @id @default(uuid()) @db.Uuid
+  orderId   String?            @unique @db.Uuid
+  order     Order?             @relation(fields: [orderId], references: [id]) // Relation defined here
+  status    Enum_AndersonOrder @default(InProgress)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  deletedAt DateTime?          @db.Timestamp // Nullable field for soft deletion
+}
+
+model Order {
+  id             String          @id @default(uuid()) @db.Uuid
+  customerId     String          @db.Uuid
+  total          Float
+  customer       Customer        @relation(fields: [customerId], references: [id])
+  observation    String?
+  delivery_cost  Float? // Nullable delivery cost field
+  is_to_office   Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?       @db.Timestamp
+  items          OrderItem[]
+  andersonOrders AndersonOrders? // No @relation here, as it's already defined on the other side
 }
