@@ -18,6 +18,7 @@ export class OrderController {
 
     @Get('wilayas')
     async getWilayas() {
+        console.log("---------- OrderController.getWilayas ----------");
         return await this.andersonService.getWilayas();
     }
 
